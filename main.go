@@ -1,7 +1,7 @@
 package main
 
 import (
-	err "github.com/hanfried/tlpigo/lib/errors"
+	err "github.com/hanfried/tlpigo/errors"
 )
 
 func main() {
