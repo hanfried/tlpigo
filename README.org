@@ -1,0 +1,24 @@
+#+TITLE: Readme
+
+* The Linux Programming Interface with Golang
+
+Following the famous [[https://www.man7.org/tlpi/][The Linux Programming Interface]] book from Michael Kerrisk.
+But now in Golang (instead of C).
+
+I started this project to learn:
+- more details about how Linux works
+- Golang
+- something about System Programming (coming from a scripting language background)
+- understand C idioms and acronyms by working through the book (C has a simple
+  syntax, but many C programs are hard to understand without some practice in
+  reading/writing C code)
+
+I choosed Golang as:
+- it is easier to understand
+- has less gotchas than C (and thus is more practical to program)
+- it is the language of Kubernetes and DevOps (both matter to me in my profession)
+- it probably is also easier to start into system programming than with Rust
+
+** Structure
+
+I follow the structure of the [[https://www.man7.org/tlpi/code/download/tlpi-200424-dist.tar.gz][Distribution source C source code]].
