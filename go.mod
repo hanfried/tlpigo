@@ -11,5 +11,5 @@ require (
 	github.com/alecthomas/kong v0.2.9
 	github.com/hanfried/tlpigo/errors v0.0.0-00010101000000-000000000000
 	github.com/hanfried/tlpigo/fileio v0.0.0-00010101000000-000000000000
-	golang.org/x/sys v0.0.0-20200523222454-059865788121
+	golang.org/x/sys v0.0.0-20200602100848-8d3cce7afc34
 )
