@@ -103,6 +103,7 @@ func main() {
 					}
 					fmt.Printf(charfmt, c)
 				}
+				println()
 			}
 		case 'w':
 			numWritten := fileio.WriteBuf(fd, []byte(op.writeContent), "seek", cli.File)
