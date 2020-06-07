@@ -21,3 +21,87 @@ I choosed Golang as:
 * Structure
 
 I follow the structure of the [[https://www.man7.org/tlpi/code/download/tlpi-200424-dist.tar.gz][Distribution source C source code]].
+All code examples are formatted with =gofmt= and linted with [[https://github.com/golangci/golangci-lint][golangci-lint --enable-all]].
+I try to organize the Golang code as described in https://github.com/golang-standards/project-layout.
+
+** Chapter 1 - History and Standards
+
+Interesting, but nothing to code.
+
+** Chapter 2 - Fundamental Concepts
+
+Important, but still nothing to code.
+
+** Chapter 3 - System Programming Concepts
+
+Here, Michael Kerrisk starts coding and writes an own error handling module.
+The concepts aren't really implementable the same way in Golang (unless we want to use "unsafe" constructs).
+
+We find in the C source code 3 ways how programs could be terminated and several
+error message functions. None of them really applies to the way Golang handles
+termination and errors, so I only implemented a [[./internal/errors/functions.go][Terminate]] function that can be
+called with =go run ./cmd/errors/terminate.go= but it's not intended to be
+really used.
+
+*** Aborting and Core Dump
+
+If an environment variable =EF_DUMPCORE= is set, the C programs are supposed to
+run C's =abort()= method what in the end raises an =ABORT= signal event what
+results in abrupt termination of the program by the system and writing a core
+dump.
+
+In principle we could implement it as well in Golang, but if I understand it
+correctly it is highly recommended *not* to abort a running Golang program. If
+we want a core dump for what ever reason of a Go program, we only need to set
+`ulimit -c unlimited` (or set a number for how big the core dump should be max)
+and set environment variable `GOTRACEBACK=trash` to get a core dump when
+exiting.
+
+*** Immediate exiting without cleaning up
+
+The C function =_exit()= stops the program without any flushing of file handlers
+or running =atexit()= methods. Even in C world, usually that's not the way to
+stop a program. It is intended to be used with for example forks where we don't
+want to flush or close handlers shared.
+
+We can implement this functionality in Golang with calling =os.Exit(EXIT_CODE)=.
+But we should not need it in Golang as we don't need forks for parallelity as
+Golang has goroutines instead.
+
+What we might need from (e.g. when argument parsing fails) is writing a message
+and stop right there. We can use =log.Fatal(msg)= to achieve it, but even this
+is discussed whether it is code smell or not in Golang.
+
+*** Exit on error with cleaning up
+
+In C we'd call =exit()= (now without the underscore) to achieve it. Michael
+Kerrisk implements several functions to also dump a human readable error message
+along for the =errno= or to write an own error message or to write a usage
+message if argument parsing fails.
+
+First of all, we have a different error approach in Golang. Instead of one
+global =errno= variable that can be affected everywhere in the program (that's
+why it's copied in the C sources), Golang returns an error variable for every
+call that could fail. In case, this error variable knows already its human
+readable error message by =err.Error()=. Indeed, there is no way and no need in
+Golang to lookup the corresponding error message for an =errno=. (Unless we want
+to import =<errno.h>= from C). So, the usual way in Golang we communicate an
+error to the program user is to call =panic(fmt.Sprintf("Something failed: %s",
+err.Error()))= and in addition to what C makes we also get a minimal stack trace.
+
+For argument parsing, I'll use most of the time argument parsing modules, so no
+need to implement =errUsage= methods here. This is debatable as there is some
+overhead with them (e.g. they might =malloc= memory), so in some system
+programming situations, this might not be the preferred way (e.g. to write a
+tool to inspect out of memory situations).
+
+** Chapter 4 - File I/O: The Universal I/O Model
+
+Here, first some basic fileio is implemented (opening, closing, writing, reading) in [[./pkg/fileio/fileio.go]]
+
+Implemented:
+- [[./pkg/fileio/copy.go][copy]] functionality that can be called with =go run cmd/fileio/copy/copy.go <SRC> <DEST>=
+- [[./cmd/fileio/seek/seek.go][seek]] program to write, read text and hex from a file and seek to a random position
+- [[./pkg/fileio/tee.go][tee]] functionality that can be called with =go run cmd/fileio/tee/tee.go --append <DEST>=
+- [[./pkg/fileio/sparse_copy.go][sparse copy]] functionality to copy files with holes that is active if set a
+  =--hole-size <LENGTH>= option to the [[./cmd/fileio/copy/copy.go][copy program]]
