@@ -71,6 +71,8 @@ func main() {
 
 	flagsReadWriteOrCreate := sys.O_RDWR | sys.O_CREAT
 	fd := fileio.Open("seek", cli.File, flagsReadWriteOrCreate, fileio.PermsAllReadWrite)
+	defer fileio.Close(fd, "seek", cli.File)
+
 	ops := make([]seekOperation, len(cli.Operations))
 
 	for i, opstr := range cli.Operations {
@@ -113,7 +115,6 @@ func main() {
 			if err != nil {
 				panic(fmt.Sprintf("lseek error: '%s'", err.Error()))
 			}
-
 			fmt.Printf("%c%d: seek succeeded, set offset to %d\n", op.cmd, op.offset, off)
 		}
 	}
