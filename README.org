@@ -18,6 +18,8 @@ I choosed Golang as:
 - it is the language of Kubernetes and DevOps (both matter to me in my profession)
 - it probably is also easier to start into system programming than with Rust
 
+If you prefer videos: I'm putting content about this project on [[https://www.youtube.com/channel/UCN3M_sScbPDAD9G5yOWnFFA][my youtube channel]]
+
 * Structure
 
 I follow the structure of the [[https://www.man7.org/tlpi/code/download/tlpi-200424-dist.tar.gz][Distribution source C source code]].
@@ -105,3 +107,5 @@ Implemented:
 - [[./pkg/fileio/tee.go][tee]] functionality that can be called with =go run cmd/fileio/tee/tee.go --append <DEST>=
 - [[./pkg/fileio/sparse_copy.go][sparse copy]] functionality to copy files with holes that is active if set a
   =--hole-size <LENGTH>= option to the [[./cmd/fileio/copy/copy.go][copy program]]
+
+You can find a video about my implementation and discussion of[[https://www.youtube.com/watch?v=c0Z9vb9hzC0&][ Chapter 3 and 4]].
