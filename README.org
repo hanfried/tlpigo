@@ -53,8 +53,8 @@ dump.
 In principle we could implement it as well in Golang, but if I understand it
 correctly it is highly recommended *not* to abort a running Golang program. If
 we want a core dump for what ever reason of a Go program, we only need to set
-`ulimit -c unlimited` (or set a number for how big the core dump should be max)
-and set environment variable `GOTRACEBACK=trash` to get a core dump when
+=ulimit -c unlimited= (or set a number for how big the core dump should be max)
+and set environment variable =GOTRACEBACK=trash= to get a core dump when
 exiting.
 
 *** Immediate exiting without cleaning up
